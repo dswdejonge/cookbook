@@ -1,4 +1,5 @@
 context("Coin change")
+library(cookbook)
 
 test_that("Coordinates are transformed correctly", {
   expect_equal(coin_change2(coins = c(1,2),change = 4),3)
