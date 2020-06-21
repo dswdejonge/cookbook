@@ -17,3 +17,8 @@ test_that('add_letters works', {
   expect_equal(add_letters(c()), 'z')
 })
 
+test_that("is_Pangram works", {
+  pangram <- "The quick, brown fox jumps over the lazy dog!"
+  expect_equal(is_pangram(pangram), TRUE)
+  expect_equal(is_pangram("This is not."), FALSE)
+})

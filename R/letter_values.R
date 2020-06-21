@@ -1,23 +1,23 @@
 # Refactored
-letter_value <- function(l){
-  which(tolower(l) == letters)
+letter_values <- function(v){
+  match(tolower(v),letters)
 }
 
 letter_vector <- function(s){
   strsplit(s,"")[[1]]
 }
 
-letter_vector_sum <- function(v){
-  sum(sapply(tolower(v), FUN = letter_value))
-}
-
-# Combinations
+# Combinations (Code Wars)
 words_to_marks <- function(s){
-  letter_vector_sum(letter_vector(s))
+  sum(letter_values(letter_vector(s)))
 }
 
 add_letters <- function(v) {
-  if(length(v) == 0){return("z")}
-  i <- letter_vector_sum(v) %% 26
+  i <- sum(letter_values(v)) %% 26
   return(letters[ifelse(i == 0, 26, i)])
+}
+
+# Pangram = a sentence that contains all letters in the alphabet.
+is_pangram <- function(s){
+  all(letters %in% tolower(letter_vector(s)))
 }
