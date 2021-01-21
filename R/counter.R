@@ -6,7 +6,9 @@
 # TODO: different n per integer
 counter <- function(v, n, i = length(v)){
   v[i] <- v[i]+1
-  if(v[i] > n){
+  if(i == 0){
+    return(v)
+  }else if(v[i] > n){
     v[i] <- 1
     return(counter(v, n, i-1))
   }else{
