@@ -112,7 +112,7 @@ WORMS <- function(species_names, overwrite = FALSE,
                   db_path = "~/Google Drive/Synced/Werk/Onderzoek/_Databases/WORMS",
                   db_file = "WORMS.csv",
                   meta_file = "WORMS_meta.csv"){
-  if(!file.exists(db_file) | overwrite){
+  if(!file.exists(paste0(db_path,"/",db_file)) | overwrite){
     df_worms <- get_worms_taxonomy(unique(as.character(species_names)))
     write.csv(df_worms, file = paste0(db_path,"/",db_file), row.names = FALSE)
     message("New db saved as CSV.")
