@@ -97,3 +97,43 @@ get_worms_taxonomy <- function(species_names){
   return(worms_df)
 }
 
+#' Create and update local WORMS taxonomy database
+#'
+#' This function only collects WORMS entries from API if they are not yet included in the
+#' local WORMS database.
+#' @references worrms R-package
+#' @param species_names Character vector with taxa names.
+#' @param overwrite Set to TRUE if you want to force a completely new db.
+#' @param db_path Path to local database.
+#' @param db_file Name of local database file.
+#' @param meta_file Name of local metadata file related to database.
+#' @export
+WORMS <- function(species_names, overwrite = FALSE,
+                  db_path = "~/Google Drive/Synced/Werk/Onderzoek/_Databases/WORMS",
+                  db_file = "WORMS.csv",
+                  meta_file = "WORMS_meta.csv"){
+  if(!file.exists(db_file) | overwrite){
+    df_worms <- get_worms_taxonomy(unique(as.character(species_names)))
+    write.csv(df_worms, file = paste0(db_path,"/",db_file), row.names = FALSE)
+    message("New db saved as CSV.")
+    df_meta <- data.frame(date = timestamp(), action = "Created.")
+    write.csv(df_meta, file = paste0(db_path,"/",meta_file), row.names = FALSE)
+    message("New metadata file created.")
+  }else{
+    df_worms <- read.csv(paste0(db_path,"/",db_file))
+    to_query <- unique(species_names[!(species_names %in% df_worms$Query)])
+    if(length(to_query) == 0){
+      message("All queried taxa already present in WORMS db.")
+    }else{
+      df_add <- get_worms_taxonomy(to_query)
+      df_worms <- rbind(df_worms, df_add)
+      write.csv(df_worms, file = paste0(db_path,"/",db_file), row.names = FALSE)
+      message(paste0(length(to_query)," new entries added to WORMS db."))
+      df_meta <- read.csv(paste0(db_path,"/",meta_file))
+      temp <- data.frame(date = timestamp(), action = paste0(length(to_query), " entries added."))
+      df_meta <- rbind(df_meta, temp)
+      write.csv(df_meta, file = paste0(db_path,"/",meta_file), row.names = FALSE)
+      message("Metadata file updated")
+    }
+  }
+}
