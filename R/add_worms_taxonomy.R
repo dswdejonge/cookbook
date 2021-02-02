@@ -126,7 +126,8 @@ WORMS <- function(species_names, overwrite = FALSE,
       message("All queried taxa already present in WORMS db.")
     }else{
       df_add <- get_worms_taxonomy(to_query)
-      df_worms <- rbind(df_worms, df_add)
+      #df_worms <- rbind(df_worms, df_add)
+      df_worms <- dplyr::bind_rows(df_worms, df_add)
       write.csv(df_worms, file = paste0(db_path,"/",db_file), row.names = FALSE)
       message(paste0(length(to_query)," new entries added to WORMS db."))
       df_meta <- read.csv(paste0(db_path,"/",meta_file))
